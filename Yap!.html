@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Yap!</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: black;
+			color: white;
+		}
+
+		h1 {
+			text-align: center;
+			margin-top: 50px;
+			margin-bottom: 30px;
+			color: white;
+		}
+
+		.container {
+			margin: 0 auto;
+			max-width: 600px;
+			padding: 20px;
+			background-color: #000000;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+
+		form {
+			display: flex;
+			flex-direction: column;
+			margin-bottom: 20px;
+		}
+
+		label {
+			font-weight: bold;
+			margin-bottom: 5px;
+			color: black;
+		}
+
+		input[type="text"] {
+			padding: 10px;
+			margin-bottom: 10px;
+			border: none;
+			border-radius: 3px;
+			box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+		}
+
+		.post {
+			padding: 10px;
+			margin-bottom: 10px;
+			background-color: #000000;
+			border-radius: 3px;
+			box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+			word-break: break-all;
+		}
+
+		.timestamp {
+			color: #999;
+			font-size: 12px;
+		}
+
+	</style>
+</head>
+<body>
+	<h1>Yap!</h1>
+	<div class="container">
+		<form id="postForm">
+			<label for="postInput">Write something:</label>
+			<input type="text" id="postInput" maxlength="25" placeholder="25 characters max" required>
+			<button type="submit">Post</button>
+		</form>
+		<div id="posts"></div>
+	</div>
+
+	<script>
+		// Retrieve posts from localStorage or initialize an empty array
+		const posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+		// Submit post function
+		function submitPost(event) {
+			event.preventDefault();
+			const postInput = document.getElementById('postInput');
+			const postText = postInput.value.trim();
+			if (postText.length > 0 && postText.length <= 25) {
+				posts.unshift(postText);
+				renderPosts();
+				postInput.value = '';
+				// Store updated posts array in localStorage
+				localStorage.setItem('posts', JSON.stringify(posts));
+			}
+		}
+
+		// Render posts function
+		function renderPosts() {
+			const postsDiv = document.getElementById('posts');
+			postsDiv.innerHTML = '';
+			posts.forEach((post, index) => {
+				const postDiv = document.createElement('div');
+				postDiv.classList.add('post');
+				postDiv.innerText = post;
+				const timestampSpan = document.createElement('span');
+				timestampSpan.classList.add('timestamp');
+				const timestamp = new Date().toLocaleString();
+				timestampSpan.innerText = timestamp;
+				postDiv.appendChild(timestampSpan);
+				postsDiv.appendChild(postDiv);
+			});
+		}
+
+		renderPosts();
+
+		// Add event listener to form
+		const postForm = document.getElementById('postForm');
+		postForm.addEventListener('submit', submitPost);
+	</script>
+</body
